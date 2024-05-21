@@ -3,14 +3,14 @@ const path = require('node:path');
 const { Client, Collection, Events, GatewayIntentBits } = require('discord.js');
 const dotenv = require('dotenv');
 const sqlite3 = require('sqlite3').verbose();
-const moment = require('moment');
-const axios = require('axios');
-
-const { getChannelIds } = require('./functions/getChannelIds.js');
-const { download } = require('./functions/download.js');
+const schedule  = require('node-schedule')
 
 
-
+const { maimai } = require('./games/maimai.js');
+const { maiintl } = require('./games/maiintl.js');
+const { chunithm } = require('./games/chunithm.js');
+const { chuintl } = require('./games/chuintl.js');
+const { ongeki } = require('./games/ongeki.js');
 
 dotenv.config();
 
@@ -99,117 +99,22 @@ db.close((err) => {
 	console.log('Closed the database connection.');
 });
 
-/*// Schedule the job to run at the start of every hour
-const job = schedule.scheduleJob({ minute: 0, tz: timeZone }, async () => {
-	try {
-		await main();
-	} catch (error) {
-		console.error(chalk.red('[ERROR] An unexpected error occurred:'), error.message);
-	}
 
-	// Log the next scheduled time
-	const nextInvocation = job.nextInvocation();
-});*/
-
-// Download the new JSON file
-//const newFileName = './new.json';
-//const url = 'https://info-maimai.sega.jp/wp-json/thistheme/v1/articlesRest';
-
-
-// Compare JSON files
-async function compareJson() {
-	try {
-		const oldData = JSON.parse(fs.readFileSync('./old.json'));
-		const newData = JSON.parse(fs.readFileSync(`./${newFileName}`));
-		
-		const newObjects = newData.filter(newObj => 
-			!oldData.some(oldObj => JSON.stringify(oldObj.date) === JSON.stringify(newObj.date))
-		);
-		
-		if (newObjects.length > 0) {
-			console.log('[INFO] New Objects:', newObjects);
-			fs.writeFileSync('newObjects.json', JSON.stringify(newObjects, null, 2));
-			fs.renameSync(newFileName, 'old.json');
-		} else {
-			console.log('[INFO] Same file, Skipping!');
-			fs.writeFileSync('newObjects.json', JSON.stringify(newObjects, null, 2));
-			fs.renameSync(newFileName, 'old.json');
-		}
-	} catch (error) {
-		console.error('Error comparing JSON files:', error.message);
-	}
-}
-
-// Load Images
-async function LoadImages(channelIds){
-	try {
-		const data = JSON.parse(fs.readFileSync('./newObjects.json'));
-		const imageFolder = 'images';
-		fs.mkdirSync(imageFolder, { recursive: true });
-		for (const item of data) {
-			// Extract year, month, and day from the string
-			const myDate = moment(item.date, 'YYYY年 MM月 DD日').toDate();
-			const date = moment(myDate).format('YYYY-MM-DD');
-			const imageUrl = item.thumbnail;
-			const imageFileName = `${imageFolder}/${date}_pop.jpg`;
-	
-			console.log(`Downloading image from: ${imageUrl}`);
-	
-			const imageResponse = await axios.get(imageUrl, { responseType: 'arraybuffer' });
-			fs.writeFileSync(imageFileName, imageResponse.data, 'binary');
-			console.log(`Downloaded and saved image: ${imageFileName}`);
-	
-			for (const channelId of channelIds) {
-                await postImageToDiscord(imageUrl, item, channelId);
-            }
-		}
-	} catch (err) {
-		console.error(err);
-	}
-	
-}
-
-async function postImageToDiscord(imageUrl, item, channelId){
-	console.log(channelId);
-	const avatarUrl = "https://graph.facebook.com/maimaiDX/picture?type=square";
-	const embedMessage = {
-        embeds: [
-            {
-                title: item.title,
-                description: item.permalink,
-                color: 4571344,
-                image: { url: imageUrl },
-                author: { name: 'maimai でらっくす', icon_url: avatarUrl },
-                footer: { text: `Generated at ${moment().format('YYYY-MM-DD')}` },
-                thumbnail: { url: avatarUrl },
-            },
-        ],
-        username: 'maimai でらっくす',
-        avatar_url: avatarUrl,
-    };
-
-	const channel = client.channels.cache.get(channelId);
-    if (!channel) {
-        console.error(`Channel with ID ${channelId} not found.`);
-        return;
-    }
-
-    channel.send(embedMessage).then(() => {
-        console.log(`Message sent to channel ID ${channelId}`);
-    }).catch(console.error);
-}
 
 // Main function
 async function main() {
 	//await download();
-	await download('mai', 'https://info-maimai.sega.jp/wp-json/thistheme/v1/articlesRest')
-	await compareJson();
-	const channelIds = await getChannelIds();
-	console.log(channelIds);
-    if (channelIds.length === 0) {
-        console.error('No channels found in the database.');
-        return;
-    }
-
-    await LoadImages(channelIds);
+	await maimai(client);
+	await chunithm(client);
+	await chuintl(client);
+	await maiintl(client);
+	await ongeki(client);
+	console.log('now is :' + new Date);
+	console.log('next:' + sche.nextInvocation());
 }
+
+var taskFreq = '*/30 * * * *'
+
+var sche = schedule.scheduleJob(taskFreq, () => {
+	main();
+})
