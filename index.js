@@ -6,6 +6,11 @@ const sqlite3 = require('sqlite3').verbose();
 const moment = require('moment');
 const axios = require('axios');
 
+const { getChannelIds } = require('./functions/getChannelIds.js');
+const { download } = require('./functions/download.js');
+
+
+
 
 dotenv.config();
 
@@ -107,19 +112,9 @@ const job = schedule.scheduleJob({ minute: 0, tz: timeZone }, async () => {
 });*/
 
 // Download the new JSON file
-const newFileName = './new.json';
-const url = 'https://info-maimai.sega.jp/wp-json/thistheme/v1/articlesRest';
+//const newFileName = './new.json';
+//const url = 'https://info-maimai.sega.jp/wp-json/thistheme/v1/articlesRest';
 
-async function download() {
-	try {
-		const response = await fetch(url);
-		const json = await response.json();
-		fs.writeFileSync(newFileName, JSON.stringify(json, null, 2));
-		console.log(chalk.green(`Downloaded and saved ${newFileName}`));
-	} catch (error) {
-		console.error('Error downloading the file:', error.message);
-	}
-}
 
 // Compare JSON files
 async function compareJson() {
@@ -204,28 +199,10 @@ async function postImageToDiscord(imageUrl, item, channelId){
     }).catch(console.error);
 }
 
-// Fetch channel IDs from the database
-async function getChannelIds() {
-    return new Promise((resolve, reject) => {
-        const db = new sqlite3.Database('database.db');
-        const query = `SELECT ChannelId FROM channels`;
-
-        db.all(query, [], (err, rows) => {
-            if (err) {
-                reject(err);
-            } else {
-                const channelIds = rows.map(row => BigInt(row.ChannelId).toString());
-                resolve(channelIds);
-            }
-            db.close();
-        });
-    });
-}
-
-
 // Main function
 async function main() {
-	await download();
+	//await download();
+	await download('mai', 'https://info-maimai.sega.jp/wp-json/thistheme/v1/articlesRest')
 	await compareJson();
 	const channelIds = await getChannelIds();
 	console.log(channelIds);
