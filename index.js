@@ -11,6 +11,7 @@ const { maiintl } = require('./games/maiintl.js');
 const { chunithm } = require('./games/chunithm.js');
 const { chuintl } = require('./games/chuintl.js');
 const { ongeki } = require('./games/ongeki.js');
+const { checkchannels } = require('./functions/checkchannels.js');
 
 dotenv.config();
 
@@ -104,6 +105,7 @@ db.close((err) => {
 // Main function
 async function main() {
 	//await download();
+	await checkchannels(client);
 	await maimai(client);
 	await chunithm(client);
 	await chuintl(client);

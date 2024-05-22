@@ -1,4 +1,5 @@
 const { SlashCommandBuilder } = require('@discordjs/builders')
+const { PermissionsBitField } = require('discord.js');
 const sqlite3 = require('sqlite3').verbose();
 const db = new sqlite3.Database('database.db');
 
@@ -27,7 +28,10 @@ module.exports = {
 				.setDescription('Ongeki flag')
 				.setRequired(true)),
 	async execute(interaction) {
-		const channelId = interaction.channel.id;
+		if(!interaction.member.permissions.has(PermissionsBitField.Flags.ManageChannels)) {
+			return interaction.reply({ content: 'You do not have permission to use this command.', ephemeral: true });
+		}
+		const channelId = interaction.channelId;
 		const maimai = interaction.options.getBoolean('maimai');
 		const maimaiintl = interaction.options.getBoolean('maimaiintl');
 		const chunithm = interaction.options.getBoolean('chunithm');
