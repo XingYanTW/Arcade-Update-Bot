@@ -26,3 +26,4 @@ You need rename `(Game Folder)/new.json` to -> `(Game Folder)/old.json` to worki
 - [ ] Bot Status
 - [ ] Command Usage Optimization
 - [ ] More Commands
+- [ ] Bot Homepage(?)
