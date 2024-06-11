@@ -20,3 +20,9 @@ npm run start
 
 # First Run
 You need rename `(Game Folder)/new.json` to -> `(Game Folder)/old.json` to working properly
+
+# Todo
+- [ ] More Info Button
+- [ ] Bot Status
+- [ ] Command Usage Optimization
+- [ ] More Commands
