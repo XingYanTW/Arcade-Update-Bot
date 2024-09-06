@@ -61,7 +61,7 @@ async function postImageToDiscord(imageUrl, item, channelId, client) {
 				image: { url: imageUrl },
 				author: { name: 'maimai でらっくす', icon_url: avatarUrl },
 				footer: { text: `Generated at ${moment().format('YYYY-MM-DD')}` },
-				thumbnail: { url: avatarUrl },
+				thumbnail: { url: 'https://maimai.sega.com/assets/img/buddeis/top/kv_logo.png' },
 			},
 		],
 		username: 'maimai でらっくす',
