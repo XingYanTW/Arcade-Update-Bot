@@ -56,7 +56,7 @@ async function postImageToDiscord(imageUrl, item, channelId, client) {
 				image: { url: imageUrl },
 				author: { name: 'CHUNITHM チュウニズム', icon_url: avatarUrl },
                 footer: { text: `Generated at ${moment().format('YYYY-MM-DD')}` },
-                thumbnail: { url: 'https://chunithm.sega.com/assets/img/top/kv_logo.png' },
+                thumbnail: { url: 'https://chunithm.sega.jp/storage/top/sp/top_main.logo.png' },
 			},
 		],
 		username: 'CHUNITHM チュウニズム',
