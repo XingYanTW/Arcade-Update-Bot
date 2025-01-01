@@ -10,7 +10,12 @@ const fs = require('fs');
 // Load Images
 async function LoadImages(channelIds, client) {
 	try {
-		const data = JSON.parse(fs.readFileSync('./chuintl/newObjects.json'));
+		//check if the newObjects.json file exists
+		if (!fs.existsSync('./json/chuintl/newObjects.json')) {
+			console.log('[INFO] newObjects.json not found, skipping!');
+			return;
+		}
+		const data = JSON.parse(fs.readFileSync('./json/chuintl/newObjects.json'));
 		const imageFolder = 'images';
 		fs.mkdirSync(imageFolder, { recursive: true });
 		for (const item of data) {

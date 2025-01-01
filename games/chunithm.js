@@ -10,7 +10,11 @@ const fs = require('fs');
 // Load Images
 async function LoadImages(channelIds, client) {
 	try {
-		const data = JSON.parse(fs.readFileSync('./chu/newObjects.json'));
+		if (!fs.existsSync('./json/chu/newObjects.json')) {
+			console.log('[INFO] newObjects.json not found, skipping!');
+			return;
+		}
+		const data = JSON.parse(fs.readFileSync('./json/chu/newObjects.json'));
 		const imageFolder = 'images';
 		fs.mkdirSync(imageFolder, { recursive: true });
 		for (const item of data) {
@@ -55,8 +59,8 @@ async function postImageToDiscord(imageUrl, item, channelId, client) {
 				color: 0xff2269,
 				image: { url: imageUrl },
 				author: { name: 'CHUNITHM チュウニズム', icon_url: avatarUrl },
-                footer: { text: `Generated at ${moment().format('YYYY-MM-DD')}` },
-                thumbnail: { url: 'https://chunithm.sega.jp/storage/top/sp/top_main.logo.png' },
+				footer: { text: `Generated at ${moment().format('YYYY-MM-DD')}` },
+				thumbnail: { url: 'https://chunithm.sega.jp/storage/top/sp/top_main.logo.png' },
 			},
 		],
 		username: 'CHUNITHM チュウニズム',
@@ -74,8 +78,8 @@ async function postImageToDiscord(imageUrl, item, channelId, client) {
 	}).catch(console.error);
 }
 
-async function chunithm(client){
-    await download('chu', 'https://info-chunithm.sega.jp/wp-json/thistheme/v1/articlesRest')
+async function chunithm(client) {
+	await download('chu', 'https://info-chunithm.sega.jp/wp-json/thistheme/v1/articlesRest')
 	await compareJson('chu');
 	const channelIds = await getChannelIds();
 	console.log(channelIds);
@@ -87,5 +91,5 @@ async function chunithm(client){
 }
 
 module.exports = {
-    chunithm: chunithm
+	chunithm: chunithm
 }

@@ -10,7 +10,11 @@ const fs = require('fs');
 // Load Images
 async function LoadImages(channelIds, client) {
 	try {
-		const data = JSON.parse(fs.readFileSync('./ongeki/newObjects.json'));
+		if (!fs.existsSync('./json/ongeki/newObjects.json')) {
+			console.log('[INFO] newObjects.json not found, skipping!');
+			return;
+		}
+		const data = JSON.parse(fs.readFileSync('./json/ongeki/newObjects.json'));
 		const imageFolder = 'images';
 		fs.mkdirSync(imageFolder, { recursive: true });
 		for (const item of data) {
@@ -73,8 +77,8 @@ async function postImageToDiscord(imageUrl, item, channelId, client) {
 	}).catch(console.error);
 }
 
-async function ongeki(client){
-    await download('ongeki', 'https://info-ongeki.sega.jp/wp-json/thistheme/v1/articlesRest')
+async function ongeki(client) {
+	await download('ongeki', 'https://info-ongeki.sega.jp/wp-json/thistheme/v1/articlesRest')
 	await compareJson('ongeki');
 	const channelIds = await getChannelIds();
 	console.log(channelIds);
@@ -86,5 +90,5 @@ async function ongeki(client){
 }
 
 module.exports = {
-    ongeki: ongeki
+	ongeki: ongeki
 }

@@ -10,21 +10,25 @@ const fs = require('fs');
 // Load Images
 async function LoadImages(channelIds, client) {
 	try {
-		const data = JSON.parse(fs.readFileSync('./maiintl/newObjects.json'));
+		if (!fs.existsSync('./json/maiintl/newObjects.json')) {
+			console.log('[INFO] newObjects.json not found, skipping!');
+			return;
+		}
+		const data = JSON.parse(fs.readFileSync('./json/maiintl/newObjects.json'));
 		const imageFolder = 'images';
 		fs.mkdirSync(imageFolder, { recursive: true });
 		for (const item of data) {
 			//Change data month to 2 digits
-            if (item.date[1] < 10) {
-                item.date[1] = '0' + item.date[1];
-            }
-            //Change data day to 2 digits
-            if (item.date[2] < 10) {
-                item.date[2] = '0' + item.date[2];
-            }
-            const date = item.date.join('-');
-            const imageUrl = `https://maimai.sega.com/assets/img/download/pop/download/${date}/pop.jpg`;
-            const imageFileName = `${imageFolder}/${date}_pop.jpg`;
+			if (item.date[1] < 10) {
+				item.date[1] = '0' + item.date[1];
+			}
+			//Change data day to 2 digits
+			if (item.date[2] < 10) {
+				item.date[2] = '0' + item.date[2];
+			}
+			const date = item.date.join('-');
+			const imageUrl = `https://maimai.sega.com/assets/img/download/pop/download/${date}/pop.jpg`;
+			const imageFileName = `${imageFolder}/${date}_pop.jpg`;
 
 			console.log(`Downloading image from: ${imageUrl}`);
 
@@ -79,8 +83,8 @@ async function postImageToDiscord(imageUrl, item, channelId, client) {
 	}).catch(console.error);
 }
 
-async function maiintl(client){
-    await download('maiintl', 'https://maimai.sega.com/assets/data/index.json')
+async function maiintl(client) {
+	await download('maiintl', 'https://maimai.sega.com/assets/data/index.json')
 	await compareJson('maiintl');
 	const channelIds = await getChannelIds();
 	console.log(channelIds);
@@ -92,5 +96,5 @@ async function maiintl(client){
 }
 
 module.exports = {
-    maiintl: maiintl
+	maiintl: maiintl
 }
