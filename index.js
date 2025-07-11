@@ -12,6 +12,8 @@ const { chunithm } = require('./games/chunithm.js');
 const { chuintl } = require('./games/chuintl.js');
 const { ongeki } = require('./games/ongeki.js');
 const { checkchannels } = require('./functions/checkchannels.js');
+const { initsongs } = require('./functions/initsongs.js');
+const { richpresence } = require('./functions/richpresence.js');
 
 dotenv.config();
 
@@ -119,13 +121,14 @@ db.close((err) => {
 
 // Main function
 async function main() {
+	await initsongs();
 	//await download();
-	await checkchannels(client);
+	/*await checkchannels(client);
 	await maimai(client);
 	await chunithm(client);
 	await chuintl(client);
 	await maiintl(client);
-	await ongeki(client);
+	await ongeki(client);*/
 	console.log('Current Time:' + new Date);
 	console.log('Next Scheduled Time:' + sche.nextInvocation());
 }
@@ -134,4 +137,9 @@ var taskFreq = '*/30 * * * *'
 
 var sche = schedule.scheduleJob(taskFreq, () => {
 	main();
-})
+});
+
+//await richpresence(client);
+client.on(Events.ClientReady, () => {
+	richpresence(client);
+});
