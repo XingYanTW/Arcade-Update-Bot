@@ -123,12 +123,12 @@ db.close((err) => {
 async function main() {
 	await initsongs();
 	//await download();
-	/*await checkchannels(client);
+	await checkchannels(client);
 	await maimai(client);
 	await chunithm(client);
 	await chuintl(client);
 	await maiintl(client);
-	await ongeki(client);*/
+	await ongeki(client);
 	console.log('Current Time:' + new Date);
 	console.log('Next Scheduled Time:' + sche.nextInvocation());
 }
