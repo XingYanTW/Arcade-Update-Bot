@@ -24,15 +24,20 @@ async function initsongs() {
     let songlistRaw = JSON.parse(fs.readFileSync(`${path}/songlist.json`, 'utf8'));
     // 若 songlistRaw 是物件且有 songs 欄位，則取 songs，否則直接用 songlistRaw
     let songlist = Array.isArray(songlistRaw) ? songlistRaw : (Array.isArray(songlistRaw.songs) ? songlistRaw.songs : []);
+    // 目前 songlist.json 沒有 category/catcode/title/artist/bpm 等欄位，直接全部保留
+    // 若未來資料結構有變可再調整
     if (!Array.isArray(songlist) || songlist.length === 0) {
         console.warn('[WARN] songlist is not an array or is empty. Check the structure of songlist.json');
+        return;
     }
-    // 只保留 title、artist、bpm 欄位
-    const maimaiSongs = songlist.map(song => ({
+    console.log(`[INFO] Found ${songlist.length} songs in songlist.json`);
+    // 只保留 catcode 為 maimai 的資料
+    const maimaiSongs = songlist.filter(song => song.catcode === 'maimai').map(song => ({
         title: song.title,
         artist: song.artist,
         bpm: song.bpm
     }));
+    console.log('[DEBUG] maimaiSongs sample:', maimaiSongs.slice(0, 3));
     const maimaiSongsPath = `${path}/maimaiSongs.json`;
     fs.writeFileSync(maimaiSongsPath, JSON.stringify(maimaiSongs, null, 2));
     console.log('[INFO] Filtered maimai songs written to maimaiSongs.json successfully');

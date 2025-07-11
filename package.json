@@ -20,6 +20,8 @@
     "node-fetch": "^2.7.0",
     "node-schedule": "^2.1.1",
     "path": "^0.12.7",
-    "sqlite3": "^5.1.7"
+    "sqlite3": "^5.1.7",
+    "youtube-search-api": "^2.0.0",
+    "ytdl-core": "^4.11.5"
   }
 }

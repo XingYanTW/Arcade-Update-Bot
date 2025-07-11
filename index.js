@@ -122,7 +122,7 @@ db.close((err) => {
 // Main function
 async function main() {
 	await initsongs();
-	//await richpresence(client);
+	await richpresence(client);
 	//await download();
 	/*await checkchannels(client);
 	await maimai(client);
