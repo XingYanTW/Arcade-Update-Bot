@@ -114,6 +114,80 @@ async function richpresence(client) {
         status: 'online',
     });
     console.log(`[INFO] Rich presence set to: ${title} by ${artist} (${currentTime}/${videoLength || '??:??'})`);
+
+
+    // 動態進度條：每秒更新一次
+    if (totalSeconds > 0) {
+        let elapsed = 0;
+        const barLength = 26;
+        const updateBar = () => {
+            const currentMin = Math.floor(elapsed / 60);
+            const currentSec = elapsed % 60;
+            const currentTime = `${currentMin.toString().padStart(2, '0')}:${currentSec.toString().padStart(2, '0')}`;
+            let bar = '';
+            const pos = Math.floor((elapsed / totalSeconds) * barLength);
+            for (let i = 0; i < barLength; i++) {
+                if (i === pos) {
+                    bar += '◉';
+                } else {
+                    bar += '━';
+                }
+            }
+            let detailsStr = `${currentTime} ${bar} ${videoLength || '??:??'}`;
+            if (detailsStr.length > 128) {
+                detailsStr = detailsStr.slice(0, 128);
+            }
+            const maxStateLength = 64;
+            let stateStr = detailsStr;
+            if (stateStr.length < maxStateLength) {
+                const totalPad = maxStateLength - stateStr.length;
+                const leftPad = Math.floor(totalPad / 2);
+                const rightPad = totalPad - leftPad;
+                stateStr = ' '.repeat(leftPad) + stateStr + ' '.repeat(rightPad);
+            }
+            client.user.setPresence({
+                activities: [{
+                    name: `🎵 ${title} — ${artist}`,
+                    type: 2,
+                    state: stateStr,
+                }],
+                status: 'online',
+            });
+            if (elapsed < totalSeconds) {
+                setTimeout(() => {
+                    elapsed++;
+                    updateBar();
+                }, 1000);
+            } else {
+                // 歌曲播完自動換下一首
+                richpresence(client);
+            }
+        };
+        updateBar();
+    } else {
+        // 無法取得長度時只顯示一次
+        let detailsStr = `00:00 ━━━━━━━━━━◉━━━━━━━━━━ ${videoLength || '??:??'}`;
+        if (detailsStr.length > 128) {
+            detailsStr = detailsStr.slice(0, 128);
+        }
+        const maxStateLength = 64;
+        let stateStr = detailsStr;
+        if (stateStr.length < maxStateLength) {
+            const totalPad = maxStateLength - stateStr.length;
+            const leftPad = Math.floor(totalPad / 2);
+            const rightPad = totalPad - leftPad;
+            stateStr = ' '.repeat(leftPad) + stateStr + ' '.repeat(rightPad);
+        }
+        client.user.setPresence({
+            activities: [{
+                name: `🎵 ${title} — ${artist}`,
+                type: 2,
+                state: stateStr,
+            }],
+            status: 'online',
+        });
+        console.warn('[WARN] Video length is unknown, rich presence will not auto-update');
+    }
 }
 
 
