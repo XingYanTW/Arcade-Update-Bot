@@ -5,6 +5,7 @@ const { getChannelSettings } = require('../functions/database.js')
 const moment = require('moment');
 const axios = require('axios');
 const fs = require('fs');
+const { ButtonBuilder, ButtonStyle } = require('discord.js');
 
 // Load Images
 async function LoadImages(channelIds, client) {
@@ -55,17 +56,23 @@ async function postImageToDiscord(imageUrl, item, channelId, client) {
         embeds: [
             {
                 title: item.title,
-                description: item.permalink,
+                //description: item.permalink,
                 color: 4571344,
                 image: { url: imageUrl },
                 author: { name: 'maimai でらっくす', icon_url: avatarUrl },
-                footer: { text: `Generated at ${moment().format('YYYY-MM-DD')}` },
-				thumbnail: { url: 'https://maimai.sega.jp/assets/maiHeader/logo.png' },
+                footer: { text: `${moment().format('YYYY-MM-DD')}` },
+				thumbnail: { url: 'https://maimai.sega.jp/storage/root/logo.png' },
 			},
         ],
         username: 'maimai でらっくす',
         avatar_url: avatarUrl,
     };
+
+    const button = new ButtonBuilder()
+        .setLabel('閱讀更多')
+        .setURL(item.permalink)
+        .setStyle(ButtonStyle.Link);
+    embedMessage.components = [{ type: 1, components: [button] }];
 
     const channel = client.channels.cache.get(channelId);
     if (!channel) {

@@ -60,12 +60,18 @@ async function postImageToDiscord(imageUrl, item, channelId, client) {
 				image: { url: imageUrl },
 				author: { name: 'CHUNITHM チュウニズム', icon_url: avatarUrl },
 				footer: { text: `Generated at ${moment().format('YYYY-MM-DD')}` },
-				thumbnail: { url: 'https://chunithm.sega.jp/storage/top/sp/top_main.logo.png' },
+				thumbnail: { url: 'https://chunithm.sega.jp/$site/components/chuniNavi/logo.png' },
 			},
 		],
 		username: 'CHUNITHM チュウニズム',
 		avatar_url: avatarUrl,
 	};
+
+    const button = new ButtonBuilder()
+            .setLabel('閱讀更多')
+            .setURL(item.permalink)
+            .setStyle(ButtonStyle.Link);
+        embedMessage.components = [{ type: 1, components: [button] }];
 
 	const channel = client.channels.cache.get(channelId);
 	if (!channel) {

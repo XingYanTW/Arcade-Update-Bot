@@ -49,7 +49,7 @@ async function LoadImages(channelIds, client) {
 
 async function postImageToDiscord(imageUrl, item, channelId, client) {
 	console.log(channelId);
-	const avatarUrl = "https://pbs.twimg.com/profile_images/1642000184547889154/D0hZHBwD_400x400.png";
+	const avatarUrl = "https://pbs.twimg.com/profile_images/1905064377474228224/miXy0L6q_400x400.png";
 	const embedMessage = {
 		embeds: [
 			{
@@ -59,12 +59,18 @@ async function postImageToDiscord(imageUrl, item, channelId, client) {
 				image: { url: imageUrl },
 				author: { name: 'オンゲキ', icon_url: avatarUrl },
 				footer: { text: `Generated at ${moment().format('YYYY-MM-DD')}` },
-				thumbnail: { url: avatarUrl },
+				thumbnail: { url: "https://chunithm.sega.jp/$site/components/chuniNavi/logo.png" },
 			},
 		],
 		username: 'オンゲキ',
 		avatar_url: avatarUrl,
 	};
+
+    const button = new ButtonBuilder()
+            .setLabel('閱讀更多')
+            .setURL(item.permalink)
+            .setStyle(ButtonStyle.Link);
+        embedMessage.components = [{ type: 1, components: [button] }];
 
 	const channel = client.channels.cache.get(channelId);
 	if (!channel) {

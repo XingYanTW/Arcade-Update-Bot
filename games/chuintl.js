@@ -68,6 +68,12 @@ async function postImageToDiscord(imageUrl, item, channelId, client) {
 		avatar_url: avatarUrl,
 	};
 
+    const button = new ButtonBuilder()
+            .setLabel('閱讀更多')
+            .setURL(item.permalink)
+            .setStyle(ButtonStyle.Link);
+        embedMessage.components = [{ type: 1, components: [button] }];
+
 	const channel = client.channels.cache.get(channelId);
 	if (!channel) {
 		console.error(`Channel with ID ${channelId} not found.`);
