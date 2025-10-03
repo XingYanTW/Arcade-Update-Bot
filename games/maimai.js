@@ -51,7 +51,7 @@ async function LoadImages(channelIds, client) {
 
 async function postImageToDiscord(imageUrl, item, channelId, client) {
     console.log(`[DEBUG] Posting image to Discord, Channel ID: ${channelId}`);
-    const avatarUrl = "https://graph.facebook.com/maimaiDX/picture?type=square";
+    const avatarUrl = "https://www.google.com/s2/favicons?sz=64&domain=maimai.sega.jp";
     const embedMessage = {
         embeds: [
             {

@@ -53,7 +53,7 @@ async function LoadImages(channelIds, client) {
 
 async function postImageToDiscord(imageUrl, item, channelId, client) {
 	console.log(channelId);
-	const avatarUrl = "https://pbs.twimg.com/profile_images/1735059307195256832/6YSNiEle_400x400.jpg";
+	const avatarUrl = "https://www.google.com/s2/favicons?sz=64&domain=chunithm.sega.com";
 	const embedMessage = {
 		embeds: [
 			{

@@ -85,7 +85,7 @@ async function generateAnnouncement(imageUrl, date) {
 // === 發送圖片 + 公告到 Discord ===
 async function postImageToDiscord(imageUrl, item, channelId, client, date) {
   console.log(channelId);
-  const avatarUrl = "https://graph.facebook.com/maimaiDX/picture?type=square";
+  const avatarUrl = "https://www.google.com/s2/favicons?sz=64&domain=maimai.sega.com";
 
   // 呼叫 AI 生成公告
   const announcement = await generateAnnouncement(imageUrl, date);
