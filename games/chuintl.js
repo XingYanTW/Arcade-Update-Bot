@@ -78,6 +78,8 @@ async function postImageToDiscord(imageUrl, item, channelId, client) {
 
 	const channel = client.channels.cache.get(channelId);
 	if (!channel) {
+		// save error to a log file
+		fs.appendFileSync('error.log', `[${new Date().toISOString()}] Channel with ID ${channelId} not found.\n`);
 		console.error(`Channel with ID ${channelId} not found.`);
 		return;
 	}

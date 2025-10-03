@@ -10,8 +10,8 @@ const db = new sqlite3.Database('database.db');
 async function checkchannels(client) {
     getChannelIds().then(channelIds => {
         channelIds.forEach(channelId => {
-            console.log(`Checking channel ${channelId}`);
-            console.log(client.guilds.cache.map(guild => guild.channels.cache.get(channelId)));
+            //console.log(`Checking channel ${channelId}`);
+            //console.log(client.guilds.cache.map(guild => guild.channels.cache.get(channelId)));
             //if channel is not found, log it
             if (!client.guilds.cache.map(guild => guild.channels.cache.get(channelId)).some(channel => channel)) {
                 console.log(`Channel ${channelId} not found.`);
@@ -19,6 +19,8 @@ async function checkchannels(client) {
 
                 db.run(deleteQuery, [channelId], function (err) {
                     if (err) {
+                        // save error to a log file
+                        fs.appendFileSync('error.log', `[${new Date().toISOString()}] ${err.message}\n`);
                         console.error(err.message);
                         console.log('There was an error while deleting the channel.');
                     }

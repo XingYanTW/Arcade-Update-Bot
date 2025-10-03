@@ -1,22 +1,22 @@
-const fs = require('fs');
+const fs = require('fs-extra');
 
 async function compareJson(folder) {
 	try {
-		console.log(`[DEBUG] Starting compareJson with folder: ${folder}`);
+		//console.log(`[DEBUG] Starting compareJson with folder: ${folder}`);
 
 		//if old.json doesn't exist, rename new.json to old.json
 		if (!fs.existsSync(`./json/${folder}/old.json`)) {
-			console.log('[DEBUG] old.json does not exist');
+			//console.log('[DEBUG] old.json does not exist');
 			fs.renameSync(`./json/${folder}/new.json`, `./json/${folder}/old.json`);
-			console.log('[INFO] old.json not found, new.json renamed to old.json');
+			//console.log('[INFO] old.json not found, new.json renamed to old.json');
 			return;
 		}
 
-		console.log('[DEBUG] old.json exists, reading files');
+		//console.log('[DEBUG] old.json exists, reading files');
 		const oldData = JSON.parse(fs.readFileSync(`./json/${folder}/old.json`));
 		const newData = JSON.parse(fs.readFileSync(`./json/${folder}/new.json`));
 
-		console.log('[DEBUG] Files read successfully');
+		//console.log('[DEBUG] Files read successfully');
 		//console.log('[DEBUG] oldData (first 5 items):', oldData.slice(0, 5));
 		//console.log('[DEBUG] newData (first 5 items):', newData.slice(0, 5));
 
@@ -36,6 +36,8 @@ async function compareJson(folder) {
 			//fs.renameSync(`./json/${folder}/new.json`, `./json/${folder}/old.json`);
 		}
 	} catch (error) {
+		// save error to a log file, with timestamp and error message and stack trace
+		fs.appendFileSync('error.log', `[${new Date().toISOString()}] ${error.message}\n${error.stack}\n`);
 		console.error('Error comparing JSON files:', error.message);
 	}
 }

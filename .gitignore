@@ -4,6 +4,7 @@ config.json
 node_modules
 database.db
 package-lock.json
+error.log
 
 #folder
 mai/
